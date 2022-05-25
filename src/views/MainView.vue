@@ -1,11 +1,11 @@
 <template>
   <div>
-  <barra-menu-component/>
-  <menu-component /><br>
-  <info-component/>
-  <div class="centrar_img">
-    <img src="../assets/svg/imagemain.svg" alt="">
-  </div>
+    <barra-menu-component/>
+    <menu-component /><br>
+    <info-component/>
+    <div class="centrar_img">
+      <img src="../assets/svg/imagemain.svg" alt="">
+    </div>
   
   </div>
 </template>
@@ -57,7 +57,7 @@ img{
       margin: auto auto;
       text-align: center;
       width: 300px;
-      height: 300px;   
+      height: 280px;
     }
 
  }

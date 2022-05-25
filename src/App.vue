@@ -26,6 +26,20 @@ export default {
   components: { LoginView },
     LoginView
 } */
+export default {
+  name: 'App',
+  created () {
+    // Leer la información de estado en sessionStorage cuando se carga la página
+    if (sessionStorage.getItem("store") ) {
+        this.$store.replaceState(Object.assign({}, this.$store.state,JSON.parse(sessionStorage.getItem("store"))))
+    } 
+
+         // Guarde la información en vuex en sessionStorage cuando se actualice la página
+    window.addEventListener("beforeunload",()=>{
+        sessionStorage.setItem("store",JSON.stringify(this.$store.state))
+    })
+  }
+}
 
 </script>
 
