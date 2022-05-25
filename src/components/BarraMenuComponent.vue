@@ -1,0 +1,149 @@
+<template>
+    <div>
+        <div class="menu-main">
+            <div class="menu-left"></div>
+            <div class="menu-right">
+                <ul class="nav navbar-top-links">
+                    <li><span class="bnv-message">Bienvenido : <span class="bnv-dato">{{this.$store.state.RazonSocial}}</span></span></li>
+                    <li class="bnv-picture"><img src="../assets/image/CostadelSolLogo.png" alt=""></li>
+                    <li class="bnv-noti">
+                        <v-icon class="icon-color">mail</v-icon>
+                    </li>
+                    <li class="bnv-logout">
+                       <p class="close-session"><v-icon class="icon-color icon-color-logout">logout</v-icon> Cerrar Sesion</p>
+                        <v-icon class="icon-color-single icon-color-logout">logout</v-icon>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</template>
+
+
+<script>
+
+</script>
+
+
+<style scoped>
+
+.menu-main{
+    position: absolute;
+    width: 100%;
+    height: 60px;
+    background-color: #fff;
+    display: flex;
+}
+
+.menu-left {
+    position: relative;
+    width: 50%;
+    height: 60px;
+}
+
+.menu-right {
+    position: relative;
+    width: 50%;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.bnv-picture img{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.nav{
+    display: flex;
+    flex-wrap: wrap;
+    padding-left: 0;
+    margin-bottom: 0;
+    list-style: none;
+    align-items: center;
+}
+
+.navbar-top-links li{
+    display: inline-block;
+    align-self: center;
+    margin-right: 25px;
+    font-size: 14px;
+    font-family: "open sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.icon-color{
+    font-size: 18px;
+}
+
+.icon-color-logout{
+    /* color: rebeccapurple; */
+    margin-right: 7px;
+}
+
+.bnv-dato{
+    font-weight: 200;
+    color: #333333;
+}
+
+.icon-color-single{
+    display: none;
+}
+
+
+@media (max-width: 420px) {
+    
+   .menu-main{
+    position: absolute;
+    width: 100%;
+    height: 60px;
+    background-color: #fff;
+    display: flex;
+    /* border: 1px solid blue; */
+    }
+
+    .menu-left {
+    position: relative;
+    width: 50%;
+    height: 60px;
+    }
+
+    .menu-right {
+    position: relative;
+    width: 50%;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    /* border: 1px solid blue; */
+    }
+
+    .navbar-top-links li{
+    display: inline-block;
+    align-self: center;
+    margin-right: 20px;
+    font-size: 14px;
+    font-family: "open sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    }
+
+    .navbar-top-links .bnv-message{
+        display: none;
+    }
+
+    .close-session{
+        display: none;
+    }
+
+    .icon-color-single{
+        display: block;
+    }
+
+
+
+}
+
+
+
+
+</style>
