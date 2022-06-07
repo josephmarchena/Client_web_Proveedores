@@ -8,27 +8,30 @@
     <ul class="nav-links">
      
         <li>
-          <div class="iocn-link" >
-            <a href="#" class="clic">
-              <i class='bx bx-collection' ></i>
+          <li>
+          <div class="iocn-link">
+            <a href="#">
+              <i class='bx bx-money'></i>
               <span class="link_name">Información</span>
             </a>
             <i class='bx bxs-chevron-down arrow'></i>
           </div>
-          <ul  class="sub-menu">
-            <a id="unico" class="link_name clic" href="#">Información</a>
-            <router-link to="/datos">Datos Generales</router-link>
-            <router-link to="/contactos">Contactos</router-link>
+          <ul class="sub-menu">
+            <li><a class="link_name cerrar" href="#">Información</a></li>
+             <router-link to="/datos">Datos Generales</router-link>
             <router-link to="/establecimientos">Establecimientos</router-link>
+            <router-link to="/contactos">Contactos</router-link>
+            <!-- <li><a class="cerrar" href="#">Rechazados</a></li> /contactos-->
           </ul>
         </li>
+
         <li>
           <div class="iocn-link">
             <a href="#">
               <i class='bx bx-money'></i>
               <span class="link_name">Comprobantes</span>
             </a>
-            <i class='bx bxs-chevron-down arrow' ></i>
+            <i class='bx bxs-chevron-down arrow'></i>
           </div>
           <ul class="sub-menu">
             <li><a class="link_name cerrar" href="#">Comprobantes</a></li>

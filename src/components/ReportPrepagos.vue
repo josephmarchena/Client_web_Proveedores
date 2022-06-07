@@ -4,6 +4,33 @@
         <div class="div-informacion-datos">
             <div class="posicionright">
                 
+                 <div class="TabInformacion_total">
+                    <div class="texto">
+                        <p class="tab-titulo">Total Prepago</p> 
+                        <v-icon class="icon-color">monetization_on</v-icon>     
+                    </div>
+                    <div class="contador">
+                       <div class="contador-dolares">
+                           <p class="contador-dolares-texto">$ {{totalPrepagos.Dolares}}</p>
+                          <!--  <p class="contador-dolares-num">{{montoTotalFacturado.CountDolares}}</p> -->
+                       </div>
+                       <!-- <p class="texto-facturas">Facturas</p> -->
+                    </div>
+                </div>
+                 <div class="TabInformacion_total">
+                    <div class="texto">
+                        <p class="tab-titulo">Total Prepago</p> 
+                        <v-icon class="icon-color">monetization_on</v-icon>     
+                    </div>
+                    <div class="contador">
+                       <!-- <p class="texto-facturas">Facturas</p> -->
+                       <div class="contador-soles">
+                           <p class="contador-soles-texto">S/ {{totalPrepagos.Soles}}</p>
+                          <!--  <p class="contador-soles-num">{{montoTotalFacturado.CountSoles}}</p> -->
+                       </div>
+                    </div>
+                </div>
+                
                 <div class="TabInformacion_pendiemte">
                     <div class="texto">
                         <p class="tab-titulo">Pendientes</p> 
@@ -69,7 +96,7 @@ export default {
         }
     },
      computed: {
-         ...mapState(['totalPendientesPrepago', 'totalCanceladoPrepago']),
+         ...mapState(['totalPrepagos','totalPendientesPrepago', 'totalCanceladoPrepago']),
             
         recibiendo(){
             console.log("En el computed" ,this.$store.state.totalPendientesPrepago);
@@ -94,6 +121,7 @@ export default {
         this.$store.dispatch('getComprobantesPagados'); */
         /* console.log("=======VALOR ES PENDIENTE=======>",this.$store.state.totalPendientesPrepago);
         console.log("=======VALOR ES CANCELADO=======>",this.$store.state.totalCanceladoPrepago); */
+        this.$store.dispatch('getTotalPrepago');
         this.$store.dispatch('getTotalPrepagoPendientes');
         this.$store.dispatch('getTotalPrepagoCancelado');
         /* this.$store.dispatch('getPendientePago'); */
@@ -152,6 +180,19 @@ export default {
 
 .posicionright .TabInformacion_total, .TabInformacion_pendiemte, .TabInformacion_pagados {
     margin-right: 8px;
+}
+
+.TabInformacion_total{
+    width: 200px;
+   /*  justify-items: center;
+    align-items: center; */
+    height: 100px;
+    /* border: 1px solid blue; */
+    font-family: Montserrat, sans-serif;
+    border-radius: 5px;
+    color: #fff;
+    /* text-transform: uppercase; */
+    background: #38c1f1;  /* fallback for old browsers */
 }
 
 .TabInformacion_pendiemte{
@@ -360,6 +401,21 @@ export default {
     margin: 3px;
 }
 
+.TabInformacion_total{
+    
+    position: relative;
+    width: 48%;
+   /*  justify-items: center;
+    align-items: center; */
+    height: 100px;
+    /* border: 1px solid blue; */
+    font-family: Montserrat, sans-serif;
+    border-radius: 5px;
+    color: #fff;
+    /* text-transform: uppercase; */
+    background: #38c1f1;  /* fallback for old browsers */
+}
+
 .TabInformacion_pendiemte{
     
     position: relative;
@@ -373,7 +429,6 @@ export default {
     color: #fff;
     /* text-transform: uppercase; */
     background: #f1376e;  /* fallback for old browsers */
-
 }
 
 .TabInformacion_pagados{

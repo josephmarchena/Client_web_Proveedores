@@ -15,29 +15,71 @@
                     </v-card-title>
                     <v-data-table
                         :headers="headers"
+                        :single-expand="singleExpand"
+                        :expanded.sync="expanded"
+                        item-key="idEstabl"
+                         show-expand
                         :items="computedListadoEstablecimientos"
                         :search="searchEstablecimiento"
                         :items-per-page="10"
-                        class="elevation-1"
                     >
+                    
 
                     <template v-slot:[`item.linkenitinerario`]="{ item }">
                         <a target="_blank" width="50px" :href="item.linkenitinerario">
                         <v-icon>description</v-icon>
                         </a>
                     </template>
-                    
+
+                      <template v-slot:expanded-item="{ headers, item }">
+                        <td :colspan="headers.length" title="Contactos">
+                            <v-row class="colorfila">
+                                <v-col cols="12">
+                                <filtro-contactospor-establecimientos-component :IdEstablecimiento="item.idEstabl" :DescripcionEstablecimiento="item.DescripcionEstabl"/>
+                                </v-col>
+                            </v-row>
+                        </td>
+                      </template>
+
+
+                       <!-- <template v-slot:[`data-table-expand`]="{ item }">
+                            <v-tooltip bottom>
+                            <template v-slot:activator="{ on }">
+                                <span v-on="on">{{item.data-table-expand}}</span>
+                            </template>
+                            <span>Hola</span>
+                            </v-tooltip>
+                       </template> -->
+     
+
+
                     </v-data-table>
                     </v-card>
                 </v-app>
             </div>
         </div>
+
+         <v-overlay :value="overlay">
+            <v-progress-circular
+                indeterminate
+                size="64"
+            ></v-progress-circular>
+        </v-overlay>
+
     </div>    
 </template>
 
 <script>
+//  import FiltroContactosporEstablecimientosComponent from '@components/FiltroContactosporEstablecimientosComponent.vue'
+import FiltroContactosporEstablecimientosComponent from './FiltroContactosporEstablecimientosComponent.vue'
+
+
 export default {
     name : 'ListadoEstablecimientosComponent',
+    components: {
+        // FiltroContactosporEstablecimientosComponent
+        FiltroContactosporEstablecimientosComponent,
+    },
     data(){
         return{
             establecimientos: [],
@@ -50,21 +92,27 @@ export default {
                     value: 'DescripcionEstabl',
                     width: "210px"
                 },
-                { text: 'Ciudad', value: 'Ciudad', width: "110px"},
+                { text: 'Ciudad', value: 'Ciudad', width: "110px" ,title: 'Contactos'},
                 { text: 'Direccion', value: 'Direccion', width: "210px"},
                 { text: 'CheckIn', value: 'HotelCheckin', width: "110px"},
                 { text: 'CheckOut', value: 'HotelCheckOut', width: "125px"},
                 { text: 'Itinerario', value: 'linkenitinerario', width: "120px", align: 'start'},
                 { text: 'Categoria Coltur', value: 'CategoriaColtur', width: "170px"},
-                { text: 'Categoria Hotel', value: 'CategoriaEstl', width: "170px"},
-            ]
+                { text: 'Categoria Hotel', value: 'CategoriaEstl', width: "170px", cellClass: "visible"},
+                { text: '', value: 'data-table-expand', title: 'Contactos' },            
+            ],
+             overlay: '',
+             expanded: [],
+             singleExpand: false,
         }
     },
 
     computed:{
 
         computedListadoEstablecimientos(){
-            return this.filtraEstablecimientos(this.establecimientos)
+            let data = this.filtraEstablecimientos(this.establecimientos)
+            sessionStorage.setItem("computedListadoEstablecimientos", data);
+            return data
         }
     },
 
@@ -78,10 +126,16 @@ export default {
        
     },
 
-    mounted(){
-        this.$store.dispatch('getEstablecimientos');
+    async mounted(){
+        if (sessionStorage.getItem("computedListadoEstablecimientos")) {
+            await this.$store.dispatch('getEstablecimientos');
+        }else{
+            this.overlay = true
+            await this.$store.dispatch('getEstablecimientos');
+            this.overlay = false
+        }
+        
     }
-
 }
 
 
@@ -96,7 +150,7 @@ export default {
     width: 95%;
     float: right;
     /* height: 350px; */
-   /*  border: 1px solid blueviolet; */
+    /* border: 1px solid blueviolet; */
     margin-bottom: 40px;
 }
 
@@ -127,7 +181,17 @@ a {
     background-color: transparent;
     text-align: left;
 }
-        
+
+.visible{
+    /* visibility: hidden; */
+    color: blue;
+}
+       
+.colorfila{
+    height: auto;
+    padding: 10px 1px;
+}
+
     /* .v-data-table ::v-deep td{
 font-size: 16px !important;
     } */
@@ -141,7 +205,7 @@ font-size: 16px !important;
     margin-top: 15px;
     width: 100%;
     /* float: right; */
-    height: 60px;
+    height: auto;
     /* border: 1px solid blueviolet; */
     }
 

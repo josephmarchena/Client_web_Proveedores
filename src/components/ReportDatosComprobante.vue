@@ -38,7 +38,7 @@
                         <v-icon class="icon-color">do_not_disturb_on</v-icon>
                     </div>
                     <div class="contador">
-                        <p class="contador-texto-pendiente texto-pendiente">{{comprobantesPendientes.PendientesPago}}</p>
+                        <p class="contador-texto-pendiente texto-pendiente">$ {{comprobantesPendientes.Dolares}}</p>
                     </div>
                 </div>
                  <div class="TabInformacion_pendiemte">
@@ -47,7 +47,7 @@
                         <v-icon class="icon-color">do_not_disturb_on</v-icon>
                     </div>
                     <div class="contador">
-                        <p class="contador-texto-pendiente texto-pendiente">0</p>
+                        <p class="contador-texto-pendiente texto-pendiente">S/ {{comprobantesPendientes.Soles}}</p>
                     </div>
                 </div>
 
@@ -58,7 +58,7 @@
                         <v-icon class="icon-color">library_add_check</v-icon>
                     </div>
                     <div class="contador">
-                        <p class="contador-texto-pendiente texto-pendiente">{{comprobantesPagados.ComprobantesPagados}}</p>
+                        <p class="contador-texto-pendiente texto-pendiente">$ {{comprobantesPagados.Dolares}}</p>
                     </div>
                 </div>
                  <div class="TabInformacion_pagados">
@@ -67,7 +67,7 @@
                         <v-icon class="icon-color">library_add_check</v-icon>
                     </div>
                     <div class="contador">
-                        <p class="contador-texto-pendiente texto-pendiente">{{comprobantesPagados.ComprobantesPagados}}</p>
+                        <p class="contador-texto-pendiente texto-pendiente">S/ {{comprobantesPagados.Soles}}</p>
                     </div>
                 </div>
 
@@ -91,7 +91,7 @@ export default {
        /*  colorContador(){
             return[this.comprobantesPendientes > 0 ? {'color': 'red'} :]
         } */
-
+        
     },
 
     methods :{

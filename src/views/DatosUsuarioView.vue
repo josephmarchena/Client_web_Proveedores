@@ -7,7 +7,7 @@
            <h2>{{ this.$store.state.datosUsuarioTitle}}</h2>
         </div>
     </div>
-
+       
     <div class="div-main-informacion">
         <div class="div-informacion-datos">
             <div class="div-informacion-foto">
@@ -16,38 +16,38 @@
             </div>
             <div class="div-informacion-datos-fiscales">
                 <div class="div-razonsocial-comercial">
-                        <span class="titulo-span"><h3>{{datosUser.NomComercial}}</h3></span>
+                        <span class="titulo-span"><h3>{{items.NomComercial}}</h3></span>
                 </div>
                 <div class="div-datos-comercial">
                     <div class="div-label-datos">
                         <p>RUC :</p>
                     </div>
-                    <p class="label-texto">{{datosUser.RUC}}</p>
+                    <p class="label-texto">{{items.RUC}}</p>
 
                     <div class="div-label-datos">
                         <p>Razón Social :</p>
                     </div>
-                    <p class="label-texto">{{datosUser.RazonSocial}}</p>
+                    <p class="label-texto">{{items.RazonSocial}}</p>
 
                     <div class="div-label-datos">
                         <p>Departamento :</p>
                     </div>
-                    <p class="label-texto">{{datosUser.Departamento}}</p>
+                    <p class="label-texto">{{items.Departamento}}</p>
 
                     <div class="div-label-datos">
                         <p>Provincia :</p>
                     </div>
-                    <p class="label-texto">{{datosUser.Provincia}}</p>
+                    <p class="label-texto">{{items.Provincia}}</p>
 
                     <div class="div-label-datos">
                         <p>Distrito :</p>
                     </div>
-                    <p class="label-texto">{{datosUser.Distrito}}</p>
+                    <p class="label-texto">{{items.Distrito}}</p>
 
                     <div class="div-label-datos">
                         <p>Dirección Fiscal:</p>
                     </div>
-                    <p class="label-texto">{{datosUser.Direccion}}</p>
+                    <p class="label-texto">{{items.Direccion}}</p>
 
                     
                 </div>
@@ -65,32 +65,32 @@
                     <div class="div-label-datos-adicional">
                         <p>Página Web:</p>
                     </div>
-                    <p class="label-texto-adicional">{{datosUser.PaginaWeb}}</p>
+                    <p class="label-texto-adicional">{{items.PaginaWeb}}</p>
 
                     <div class="div-label-datos-adicional">
                         <p>Página Web Reserva :</p>
                     </div>
-                    <p class="label-texto-adicional">{{datosUser.PaginaWebReserva}}</p>
+                    <p class="label-texto-adicional">{{items.PaginaWebReserva}}</p>
 
                     <div class="div-label-datos-adicional">
                         <p>Email 1:</p>
                     </div>
-                    <p class="label-texto-adicional">{{datosUser.Email1}}</p>
+                    <p class="label-texto-adicional">{{items.Email1}}</p>
 
                     <div class="div-label-datos-adicional">
                         <p>Email 2 :</p>
                     </div>
-                    <p class="label-texto-adicional">{{datosUser.Email2}}</p>
+                    <p class="label-texto-adicional">{{items.Email2}}</p>
 
                     <div class="div-label-datos-adicional">
                         <p>Teléfono 1 :</p>
                     </div>
-                    <p class="label-texto-adicional">{{datosUser.Fono1}}</p>
+                    <p class="label-texto-adicional">{{items.Fono1}}</p>
 
                     <div class="div-label-datos-adicional">
                         <p>Teléfono 2:</p>
                     </div>
-                    <p class="label-texto-adicional">{{datosUser.Fono2}}</p>
+                    <p class="label-texto-adicional">{{items.Fono2}}</p>
 
                 </div>
             </div>
@@ -104,7 +104,7 @@
                         <p>Condición de Pago:</p>
                     </div>
                     <p class="label-texto_combo"><v-combobox
-                            v-model="datosUser.FormaPago"
+                            v-model="items.FormaPago"
                             outlined
                             dense
                             style="width: 250px;"
@@ -125,7 +125,7 @@
                     <div class="div-label-datos-adicional">
                         <p>Cantidad días:</p>
                     </div>
-                    <p class="label-texto-adicional">{{datosUser.NumDiasPago}}</p>
+                    <p class="label-texto-adicional">{{items.NumDiasPago}}</p>
 
                 </div>
             </div>
@@ -138,11 +138,18 @@
 
     <div class="div-main">
         <div class="div-informacion-datos-botones">
-            <button class="info-boton" value="Contactos"><router-link to="/contactos">Contactos</router-link></button>
-            <button class="info-boton" value="Contactos"><router-link to="/establecimientos">Establecimientos</router-link></button>
+            <button class="info-boton" value="Contactos"><router-link to="/establecimientos" class="router-link">Establecimientos</router-link></button>
+            <button class="info-boton" value="Contactos"><router-link to="/contactos" class="router-link">Contactos</router-link></button>
             
         </div>
     </div>
+
+    <v-overlay :value="overlay">
+      <v-progress-circular
+        indeterminate
+        size="64"
+      ></v-progress-circular>
+    </v-overlay>
    
 </div>
 
@@ -151,8 +158,10 @@
 
 
 <script>
+
 import MenuComponent from '../components/MenuComponent.vue'
 import BarraMenuComponent from '../components/BarraMenuComponent.vue'
+import axios from 'axios'
 
 export default {
     name: 'DatosUsuarioView',
@@ -161,17 +170,18 @@ export default {
       return {
         /* select: [this.datosUser.FormaPago], */
          carga :'Hello',
-         items: ['Foo', 'Bar', 'Fizz', 'Buzz']
+         items: [],
+         overlay : ''
          
       }
     },
 
-    watch: {
-        carga (){
-            console.log("El valor ha cambiado");
-            this.carga = 'cambiado'
-        }
-    },
+    // watch: {
+    //     carga (){
+    //         console.log("El valor ha cambiado");
+    //         this.carga = 'cambiado'
+    //     }
+    // },
 
     components: {
       MenuComponent,
@@ -202,17 +212,50 @@ export default {
 
     mounted(){
         /* console.log(this.$store.state.datosUsuario.FormaPago); */
-        this.$store.dispatch('getDatosUsuario');
+        this.carga = "Ya se cargo";
+        // this.texto = 'Loading'
+        var ListDatos = async () =>{
+            // this.overlay = true
+            if (sessionStorage.getItem("ListDatos")){
+                const newJSON = sessionStorage.getItem("ListDatos")
+                const ListaDatos = JSON.parse(newJSON)
+               this.items = JSON.parse(newJSON)
+               console.log("LOS DATOS DEL NUEVO LISTADO",ListaDatos);
+            }else{
+                this.overlay = true
+                let datos = await axios.get('https://apiweb-colturproveedor.azurewebsites.net/datosProveedor/'+ this.$store.state.IdEntidad )
+                .then(res => (this.items = res.data))
+                console.log("Se ejecuto el listado");
+                const json = JSON.stringify(datos);
+                sessionStorage.setItem("ListDatos", json);
+                this.overlay = false
+            }
+        }
         
+        console.log("antes del listado");
+        
+        ListDatos()
+        
+        console.log("Se termino el listado");
+        
+        //  getDatosUsuario(){
+        //     axios.get('https://apiweb-colturproveedores.azurewebsites.net/datosProveedor/'+ this.state.IdEntidad )
+        //     .then(res => {
+        //     context.commit('getDatosUsuario', res.data);
+        //     console.log('infoDU', res);
+        //     })
+            
+        // },
+
+
     },
 
     created() {
-    
+    // this.$store.dispatch('getDatosUsuario');
+        
     }
 
 }
-
-
 </script>
 
 <style scoped>
@@ -432,11 +475,17 @@ h3 {
 
 .info-boton{
     color: #fff;
-    padding: 10px 20px 20px 25px;
-    border-radius: 14px;
+    padding: 12px 20px 20px 25px;
+    border-radius: 5px;
     background: #D15939;
     outline: none;
     font-size: 14px;
+    box-shadow: 10px 5px 10px grey;
+}
+
+.router-link{
+    font-size: 14px;
+    color: #fff;
 }
 
 .info-boton:first-child{
@@ -463,7 +512,6 @@ h3 {
 }
 
 @media (max-width: 420px) {
-
 
 .div-main{
   position: relative;
@@ -492,11 +540,9 @@ h2{
   left: 25%;
 }
 
-
 .titulo-span{
     display: inline-block;
     position: relative;
-    
 }
 
 .div-main-informacion{
@@ -509,7 +555,6 @@ h2{
     /* border: 1px solid blueviolet; */
     margin-bottom: 1px;
 }
-
 
 .div-informacion-datos{
     position: relative;
@@ -556,7 +601,6 @@ h2{
     padding-top: 35px;
     /* background-color: #D15939; */
 }
-
 
 .div-razonsocial-comercial{
     font-size: 17px;
@@ -649,10 +693,11 @@ h2{
 .info-boton{
     color: #fff;
     padding: 12px 12px 12px 12px;
-    border-radius: 14px;
+    border-radius: 5px;
     background: #D15939;
     outline: none;
     font-size: 14px;
+    
 }
 
 .info-boton:first-child{

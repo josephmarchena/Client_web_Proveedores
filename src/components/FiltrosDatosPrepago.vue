@@ -129,6 +129,14 @@
             </div>
         </div>
     </form>
+
+     <v-overlay :value="overlay">
+      <v-progress-circular
+        indeterminate
+        size="64"
+      ></v-progress-circular>
+    </v-overlay>
+
 </div>
     
 </template>
@@ -163,7 +171,8 @@ export default{
             ],
             nro_file: '',
             nro_prepago: '',
-            id: ''
+            id: '',
+            overlay: ''
 
         }
     },
@@ -208,8 +217,9 @@ export default{
         return `${day}/${month}/${year}`
         },
 
-        filtros(){
+        async filtros(){
 
+            this.overlay = true
             //this.$store.state.datosfiltroscomprobantes = this.date_desde
             console.log("Estas son los datos para el listado de prepagos",
                         this.id,this.nro_file, this.date_desde, this.date_hasta, this.nro_prepago, this.select);
@@ -226,7 +236,7 @@ export default{
             //console.log("Hiciste click en filtros",IdEntidad, this.date_desde, this.date_hasta, this.nro_factura,this.select_tipo_doc, this.select);
 
             //axios.post('http://localhost:4000/comprobantesxProveedores', {IdEntidad: IdEntidad, NroFactura: this.nro_factura, fechadesde: this.date_desde, fechahasta: this.date_hasta, tipoDocumento: this.select_tipo_doc, EstadoFactura: this.select })
-            axios.post('https://apiweb-colturproveedores.azurewebsites.net/prepagoxProveedores', objetoFiltro)
+            await axios.post('https://apiweb-colturproveedor.azurewebsites.net/prepagoxProveedores', objetoFiltro)
             .then(res => {
             //const info = res.data.mensaje;
             console.log("hola",res);
@@ -243,11 +253,73 @@ export default{
                 console.log(e.message);
             })
 
+            //ENVIANDO TOTAL DE PREPAGOS
+            await axios.get(`https://apiweb-colturproveedor.azurewebsites.net/MontoTotalPrepago/${this.id}/${this.date_desde}/${this.date_hasta}`)
+            .then(res => {
+            /* console.log('info',res);  */
+             this.$store.state.totalPrepagos = res.data
+             console.log('EN FILTROS PREPAGO', res.data);
+            })
+
+            await axios.get(`https://apiweb-colturproveedor.azurewebsites.net/TotalPendientesPrepago/${this.id}/${this.date_desde}/${this.date_hasta}`)
+            .then(res => {
+            this.$store.state.totalPendientesPrepago = res.data
+            console.log('EN FILTRO DE PENDIENTES PREPAGO', res);
+            })
+            
+             await axios.get(`https://apiweb-colturproveedor.azurewebsites.net/TotalCanceladoPrepago/${this.id}/${this.date_desde}/${this.date_hasta}`)
+            .then(res => {
+             /* console.log('info',res);  */
+             //context.commit('getTotalPrepagoCancelado', res.data);
+             this.$store.state.totalCanceladoPrepago = res.data
+             console.log('EN FILTRO DE CANCELADO PREPAGOS', res);
+            })
+            
+            this.overlay = false
             //console.log("IdEntidad",this.$store.state.IdEntidad);
             //console.log("Hiciste click en filtros", this.date_desde, this.date_hasta, this.nro_factura,this.select_tipo_doc, this.select);
+        },
+
+        async CargarDatosPrepago(){
+
+            this.overlay = true
+
+            this.id = this.$store.state.IdEntidad;
+
+            let objetoFiltro = {
+                    IdEntidad: this.id.toString(), 
+                    NroFile: this.nro_file,
+                    fechadesde: this.date_desde,
+                    fechahasta: this.date_hasta,
+                    NroPrepago: this.nro_prepago,
+                    EstadoPrepago: this.select
+                }
+
+                //console.log("Hiciste click en filtros",IdEntidad, this.date_desde, this.date_hasta, this.nro_factura,this.select_tipo_doc, this.select);
+
+                //axios.post('http://localhost:4000/comprobantesxProveedores', {IdEntidad: IdEntidad, NroFactura: this.nro_factura, fechadesde: this.date_desde, fechahasta: this.date_hasta, tipoDocumento: this.select_tipo_doc, EstadoFactura: this.select })
+               await  axios.post('https://apiweb-colturproveedor.azurewebsites.net/prepagoxProveedores', objetoFiltro)
+                .then(res => {
+                //const info = res.data.mensaje;
+                console.log("hola",res);
+                    console.log("hola",res.status);
+                    if (res.status == "200") {
+                        console.log('Si hay data');
+                        this.$store.state.datosfiltrosprepago = res.data
+                        console.log("El listado es: " + this.$store.state.datosfiltrosprepago);
+                    }else{
+                        console.log('No hay data en filtro comprobantes por no tener status 200');
+                    }
+                })
+                .catch(e => {
+                    console.log(e.message);
+                })
+            /* const IdEntidad = this. */
+                /* this.date = this.$store.state.filtroFechaDesde;
+                console.log(" Mi fecha desde es : " ,this.$store.state.filtroFechaDesde); */
+            this.overlay = false
+
         }
-
-
        /*  formatoDesde(value){
             value = new Date();
             let firstday = new Date(value.getFullYear(), value.getMonth(), 1)
@@ -256,6 +328,7 @@ export default{
             console.log("FECHA 2", fs);
             
             return dayjs(firstday).format('DD/MM/YYYY')
+            <h1 v-text="IdEstablecimiento"></h1>
         } */
         
     },
@@ -267,10 +340,7 @@ export default{
     },
 
     created(){
-        this.id = this.$store.state.IdEntidad;
-        /* const IdEntidad = this. */
-            /* this.date = this.$store.state.filtroFechaDesde;
-            console.log(" Mi fecha desde es : " ,this.$store.state.filtroFechaDesde); */
+        this.CargarDatosPrepago()
         this.$store.dispatch('setFiltroParameters', {fechaDesde: this.date_desde,  fechaHasta: this.date_hasta});
     }
 }
@@ -451,6 +521,7 @@ export default{
     height: auto;
     margin-bottom: 10px;
     margin-left: 30px;
+    /* background-color: #D15939; */
 }
 
 .div-informacion-datos-boton{

@@ -13,7 +13,7 @@
                         </div>
 
                         <div class="contenido">                    
-                            <p class="texto-fecha">Fecha de Emisión :</p>
+                            <p class="texto-fecha">Fec.Emisión :</p>
                                 <div class="container-fechas">
                                     <div class="container-fecha-desde">
                                     <p class="desde-fecha">Desde :</p>
@@ -123,6 +123,14 @@
             </div>
         </div>
     </form>
+
+    <v-overlay :value="overlay">
+      <v-progress-circular
+        indeterminate
+        size="64"
+      ></v-progress-circular>
+    </v-overlay>
+   
 </div>
 </template>
 
@@ -156,7 +164,9 @@ export default {
             { tipo: 'Nota de Debito'}
             ],
             nro_factura: '',
-            id: ''
+            id: '',
+            overlay: ''
+            
 
         }
     },
@@ -203,8 +213,9 @@ export default {
         },
 
 
-        filtros(){
+        async filtros(){
 
+            this.overlay = true
             //this.$store.state.datosfiltroscomprobantes = this.date_desde
             console.log("Estas son las fechas",this.id, this.date_desde, this.date_hasta);
             let objetoFiltro = {
@@ -219,25 +230,94 @@ export default {
             //console.log("Hiciste click en filtros",IdEntidad, this.date_desde, this.date_hasta, this.nro_factura,this.select_tipo_doc, this.select);
 
             //axios.post('http://localhost:4000/comprobantesxProveedores', {IdEntidad: IdEntidad, NroFactura: this.nro_factura, fechadesde: this.date_desde, fechahasta: this.date_hasta, tipoDocumento: this.select_tipo_doc, EstadoFactura: this.select })
-            axios.post('https://apiweb-colturproveedores.azurewebsites.net/comprobantesxProveedores', objetoFiltro)
+            await axios.post('https://apiweb-colturproveedor.azurewebsites.net/comprobantesxProveedores', objetoFiltro)
             .then(res => {
             //const info = res.data.mensaje;
-            console.log("hola",res);
-            console.log("hola",res.status);
-            if (res.status == "200") {
-                console.log('Si hay data');
-                this.$store.state.datosfiltroscomprobantes = res.data
-                console.log("El listado es: " + this.$store.state.datosfiltroscomprobantes);
-            }else{
-                console.log('No hay data en filtro comprobantes por no tener status 200');
-            }
-        })
-        .catch(e => {
-            console.log(e.message);
-        })
+                console.log("hola",res);
+                console.log("hola",res.status);
+                if (res.status == "200") {
+                    console.log('Si hay data');
+                    this.$store.state.datosfiltroscomprobantes = res.data
+                    console.log("El listado es: " + this.$store.state.datosfiltroscomprobantes);
+                }else{
+                    console.log('No hay data en filtro comprobantes por no tener status 200');
+                }
+            })
+            .catch(e => {
+                console.log(e.message);
+            })
 
+            //console.log("ENVIANDO FECHAS PARA PROCESAR EL NUEVO LISTADO" , this.date_desde, this.date_hasta);
+            //this.$store.state.filtroFechaDesde = this.date_desde
+            //this.$store.state.filtroFechaHasta = this.date_hasta
+            
+            //ENVIANDO MONTO TOTAL DE COMPROBANTES DESDE FILTRO COMPROBANTES
+            console.log("PASANDO PARAMETROS PARA LLENAR EL OBJETO MONTOS", this.id, this.date_desde, this.date_hasta);
+            await axios.get(`https://apiweb-colturproveedor.azurewebsites.net/TotalFacturado/${this.id}/${this.date_desde}/${this.date_hasta}`)
+            .then(res => {
+            /* console.log('info',res);  */
+            this.$store.state.montoTotalFacturado  = res.data
+            console.log('InfoTF', res);
+            })
+
+            //ENVIANDO MONTO DE PAGOS PENDIENTES DESDE FILTRO COMPROBANTES
+           
+            await axios.get(`https://apiweb-colturproveedor.azurewebsites.net/PendientesPagoComprobantes/${this.id}/${this.date_desde}/${this.date_hasta}`)
+            .then(res => {
+                this.$store.state.comprobantesPendientes = res.data
+                console.log('InfoPP', res);
+            })
+
+            //ENVIANDO MONTO DE COMPROBANTES PAGADOS DESDE FILTRO COMPROBANTES
+
+            await axios.get(`https://apiweb-colturproveedor.azurewebsites.net/ComprobantesPagados/${this.id}/${this.date_desde}/${this.date_hasta}`)
+            .then(res => {
+                this.$store.state.comprobantesPagados = res.data
+                console.log('InfoCP', res);
+            })
+            
+            this.overlay = false
             //console.log("IdEntidad",this.$store.state.IdEntidad);
             //console.log("Hiciste click en filtros", this.date_desde, this.date_hasta, this.nro_factura,this.select_tipo_doc, this.select);
+        },
+
+        async CargarDatosComprobantes(){
+            this.overlay = true
+            //console.log("TU ERES MI BEBITO FIU FIU CREATED",this.date_desde,this.date_hasta);
+            this.id = this.$store.state.IdEntidad;
+
+
+            let objetoFiltro = {
+                IdEntidad: this.id.toString(), 
+                NroFactura: this.nro_factura,
+                fechadesde: this.date_desde,
+                fechahasta: this.date_hasta,
+                tipoDocumento: this.select_tipo_doc,
+                EstadoFactura: this.select
+            }
+
+            //console.log("Hiciste click en filtros",IdEntidad, this.date_desde, this.date_hasta, this.nro_factura,this.select_tipo_doc, this.select);
+
+            //axios.post('http://localhost:4000/comprobantesxProveedores', {IdEntidad: IdEntidad, NroFactura: this.nro_factura, fechadesde: this.date_desde, fechahasta: this.date_hasta, tipoDocumento: this.select_tipo_doc, EstadoFactura: this.select })
+           await axios.post('https://apiweb-colturproveedor.azurewebsites.net/comprobantesxProveedores', objetoFiltro)
+            .then(res => {
+            //const info = res.data.mensaje;
+                console.log("hola",res);
+                console.log("hola",res.status);
+                if (res.status == "200") {
+                    console.log('Si hay data');
+                    this.$store.state.datosfiltroscomprobantes = res.data
+                    console.log("El listado es: " + this.$store.state.datosfiltroscomprobantes);
+                }else{
+                    console.log('No hay data en filtro comprobantes por no tener status 200');
+                }
+            })
+            .catch(e => {
+                console.log(e.message);
+            })
+
+            //console.log("TU ERES MI BEBITO FIU FIU CREATED ",this.date_desde,this.date_hasta);
+            this.overlay = false
         }
 
 
@@ -253,19 +333,21 @@ export default {
         
     },
 
-    mounted(){
-        /* console.log(this.$store.state.datosUsuario.FormaPago); */
-        this.id = this.$store.state.IdEntidad;
-        
-    },
+        mounted(){
+            // console.log("TU ERES MI BEBITO FIU FIU MOUNTED");
+            /* console.log(this.$store.state.datosUsuario.FormaPago); */
+            this.id = this.$store.state.IdEntidad;
+        },
 
-    created(){
-        this.id = this.$store.state.IdEntidad;
+        created(){
+
+            this.CargarDatosComprobantes()
         /* const IdEntidad = this. */
             /* this.date = this.$store.state.filtroFechaDesde;
             console.log(" Mi fecha desde es : " ,this.$store.state.filtroFechaDesde); */
-        this.$store.dispatch('setFiltroParameters', {fechaDesde: this.date_desde,  fechaHasta: this.date_hasta});
-    }
+            this.$store.dispatch('setFiltroParameters', {fechaDesde: this.date_desde,  fechaHasta: this.date_hasta});
+        },
+    
 
 }
 
@@ -287,7 +369,6 @@ export default {
     /* height: auto; */
     /* border: 1px solid black; */  
 }
-
 .div-informacion-datos{
     position: relative;
     background-color: #fff;
@@ -300,7 +381,6 @@ export default {
     /* box-shadow: 1px 0px 1px 0px #aaaaaa; */
     border-radius: 2px;
 }
-
 .filtro-cabecera{
     position: relative;
     width: 100%;
@@ -314,7 +394,6 @@ export default {
     /* font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; */
     font-family: 'open sans', sans-serif;
 }
-
 .filtro-detalle{
     position: relative;
     width: 100%;
@@ -324,7 +403,6 @@ export default {
     align-items: center;
     
 }
-
 .select-estado{
     width: 170px;
     /* border: 1px solid blue;
@@ -332,19 +410,15 @@ export default {
     /* align-items: center; */
     /* align-content: center; */
 }
-
 .select-estado-left{
     width: 170px;
 }
-
 .contenido{
     display: flex;
     align-items: center;
     margin-left: 12px;
     height: 100%;
 }
-
-
 .contenido-filtro-factura{
     display: flex;
     align-items: center;
@@ -352,9 +426,7 @@ export default {
     /* margin-left: 2px; */
     padding: 14px 4px;
     height: 100%;
-
 }
-
 .contenido-filtro-estado{
     display: flex;
     align-items: center;
@@ -362,7 +434,6 @@ export default {
     padding: 14px 4px;
     height: 100%;
 }
-
 .contenido-cb{
     display: flex;
     /* border: 1px solid blue; */
@@ -370,14 +441,12 @@ export default {
     margin-left: 12px;
     height: 100%;
 }
-
 /* .filtro-left{
     position: relative;
     width: 30%;
     height: 100%;
     background: yellow;
 }
-
 .filtro-right{
     position: relative;
     width: 70%;
@@ -385,33 +454,27 @@ export default {
     background: blue;
 }
  */
-
-
 .texto-fecha-tipodocumento{
     font-size: 14px;
     font-weight: 500;
     width: 42%;
     /* background-color: aqua; */
 }
-
 .texto-fecha-estado{
     font-size: 14px;
     font-weight: 500;
     width: 35%;
 }
-
 .texto-fecha{
     font-size: 14px;
     font-weight: 500;
     padding-right: 4px;
 }
-
 .texto-fecha-nrofactura{
     font-size: 14px;
     font-weight: 500;
     /* width: 34%; */
 }
-
 .desde-fecha {
     display: flex;
     align-items: center;
@@ -423,22 +486,18 @@ export default {
     align-items: center;
     font-size: 13px;
 }
-
 .dt-desde{
     /* border: 1px solid blue; */
     padding: 0;
     margin: 0;
     width: 130px;
 }
-
 .dt-hasta{
     /* border: 1px solid blue; */
     padding: 0;
     margin: 0;
     width: 130px;
 }
-
-
 .text-filtro-left{
     /* outline: chocolate; */
     margin-left: 5px;
@@ -449,7 +508,6 @@ export default {
     border-radius: 4px;
     font-size: 14px;
 }
-
 .info-boton{
     width: 100%;
     color: #fff;
@@ -463,14 +521,12 @@ export default {
     justify-content: center;
     align-items: center; */
 }
-
 .div-main-informacion-boton{
     position: relative;
     height: auto;
     margin-bottom: 10px;
     margin-left: 30px;
 }
-
 .div-informacion-datos-boton{
     position: relative;
     /* background-color: #fff; */
@@ -481,20 +537,16 @@ export default {
     /* border: 1px solid #BFBFBF; */
     /* box-shadow: 1px 0px 1px 0px #aaaaaa; */
     border-radius: 2px;
-
 }
-
 .container-fechas{
     display: flex;
    /*  background-color: aqua; */
 }
-
 .container-fecha-desde{
     position: relative;
     /* background-color: #D15939; */
     display: flex;
 }
-
 .container-fecha-hasta{
     display: flex;
 }

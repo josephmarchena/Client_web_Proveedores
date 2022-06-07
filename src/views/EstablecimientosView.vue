@@ -7,7 +7,15 @@
             <h2>{{ this.$store.state.datosListadoEstablecimientos}}</h2>
             </div>
         </div>
+        
         <listado-establecimientos/>
+  
+        <div class="div-main">
+            <div class="div-informacion-datos-botones">
+                <button class="info-boton" value="Contactos"><router-link to="/datos" class="router-link">Datos Generales</router-link></button>
+                <button class="info-boton" value="Contactos"><router-link to="/contactos" class="router-link">Contactos</router-link></button>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -64,10 +72,62 @@ h2{
     top: 20px; */
 }
 
+.div-informacion-datos-botones{
+    position: relative;
+    display: flex;
+    width: 100%;
+    height: 100%;
+    padding: 0px 35px 15px 30px;
+    right: 0;
+    /* border: 1px solid blue; */
+   /*  background-color: white; */
+    /* box-shadow: 2px 2px 2px 2px #aaaaaa; */
+    border-radius: 2px;
+    justify-content: flex-end;
+    /* border: 1px solid orange; */
+}
+
+.info-boton{
+    color: #fff;
+    padding: 12px 20px 20px 25px;
+    border-radius: 5px;
+    background: #D15939;
+    outline: none;
+    font-size: 14px;
+    box-shadow: 10px 5px 10px grey;
+}
+
+.router-link{
+    font-size: 14px;
+    color: #fff;
+}
+
+.info-boton:first-child{
+    margin-right: 20px;
+}
+
+.info-boton:hover {
+    transform: translatey(3px);
+    box-shadow: none;
+    color: #fff;
+}
+
+.info-boton:hover {
+    animation: ani9 0.4s ease-in-out infinite alternate;
+}
+@keyframes ani9 {
+    0% {
+        transform: translateY(3px);
+    }
+    100% {
+        transform: translateY(5px);
+    }
+}
+
 
 @media (max-width: 420px) {
     
-    .div-main{
+.div-main{
     position: relative;
     display: flex;
     margin-top: 15px;
@@ -75,9 +135,9 @@ h2{
     /* float: right; */
     height: 60px;
     /* border: 1px solid blueviolet; */
-    }
+}
 
-    .div-title{
+.div-title{
     position: relative;
     margin: 0 auto;
     width: 95%; 
@@ -92,6 +152,42 @@ h2{
     /* left: 120px;
     top: 20px; */
 }
+
+.div-informacion-datos-botones{
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    padding: 0px 15px 15px 0px;
+    right: 0;
+    /* border: 1px solid blue; */
+   /*  background-color: white; */
+    /* box-shadow: 2px 2px 2px 2px #aaaaaa; */
+    border-radius: 2px;
+    justify-content: flex-end;
+    /* border: 1px solid orange; */
+}
+
+.info-boton{
+    color: #fff;
+    padding: 12px 12px 12px 12px;
+    border-radius: 5px;
+    background: #D15939;
+    outline: none;
+    font-size: 14px;
+}
+
+.info-boton:first-child{
+    margin-right: 20px;
+}
+
+.info-boton:hover {
+    transform: translatey(3px);
+    box-shadow: none;
+}
+
 
 
 }

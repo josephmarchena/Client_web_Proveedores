@@ -1,50 +1,66 @@
 <template>
     <div>
         <div class="div-main-informacion">
-        <div class="div-informacion-datos">
-             <v-app id="inspire">
-                <v-card>
-                <v-card-title>
-                    <v-text-field
-                    v-model="searchContactos"
-                    append-icon="search"
-                    label="Buscar Contactos"
-                    single-line
+            <div class="div-informacion-datos">
+                <v-app id="inspire">
+                    <v-card>
+                    <v-card-title>
+                        <v-text-field
+                        v-model="searchContactos"
+                        append-icon="search"
+                        label="Buscar Contactos"
+                        single-line
+                        
+                        ></v-text-field>
+                    </v-card-title>
+                    <v-data-table
+                        :headers="headers"
+                        :items="computedListadoContactos"
+                        :search="searchContactos"
+                        :items-per-page="10"
+                        class="elevation-1"
+                    >
+
+                    <template v-slot:[`item.FlgEnvioReserva`]="{ item }">
+                        <div v-html="estadoContactos(item.FlgEnvioReserva)"></div>
+                    </template>
+
+                    <template v-slot:[`item.FlgEnvioVoucher`]="{ item }">
+                        <div v-html="estadoContactos(item.FlgEnvioVoucher)"></div>
+                    </template>
+
+                    <template v-slot:[`item.FlgEnvioFactPrepago`]="{ item }">
+                        <div v-html="estadoContactos(item.FlgEnvioFactPrepago)"></div>
+                    </template>
+
+                    <template v-slot:[`item.FlgEnvioComercial`]="{ item }">
+                        <div v-html="estadoContactos(item.FlgEnvioComercial)"></div>
+                    </template>
                     
-                    ></v-text-field>
-                </v-card-title>
-                <v-data-table
-                    :headers="headers"
-                    :items="computedListadoContactos"
-                    :search="searchContactos"
-                    :items-per-page="10"
-                    class="elevation-1"
-                >
-
-                <template v-slot:[`item.FlgEnvioReserva`]="{ item }">
-                    <div v-html="estadoContactos(item.FlgEnvioReserva)"></div>
-                </template>
-
-                <template v-slot:[`item.FlgEnvioVoucher`]="{ item }">
-                    <div v-html="estadoContactos(item.FlgEnvioVoucher)"></div>
-                </template>
-
-                <template v-slot:[`item.FlgEnvioFactPrepago`]="{ item }">
-                    <div v-html="estadoContactos(item.FlgEnvioFactPrepago)"></div>
-                </template>
-
-                <template v-slot:[`item.FlgEnvioComercial`]="{ item }">
-                    <div v-html="estadoContactos(item.FlgEnvioComercial)"></div>
-                </template>
-                
-                </v-data-table>
-                </v-card>
-            </v-app>
-
-            
+                    </v-data-table>
+                    </v-card>
+                </v-app>
+            </div>
         </div>
-    </div>
+
+        <div class="div-main">
+            <div class="div-informacion-datos-botones">
+                <button class="info-boton" value="Contactos"><router-link to="/datos" class="router-link">Datos Generales</router-link></button>
+                <button class="info-boton" value="Contactos"><router-link to="/establecimientos" class="router-link">Establecimientos</router-link></button>
+                
+            </div>
+        </div>
+
+        <v-overlay :value="overlay">
+            <v-progress-circular
+                indeterminate
+                size="64"
+            ></v-progress-circular>
+        </v-overlay>
+
     </div>    
+
+    
 </template>
 
 <script>
@@ -73,14 +89,17 @@ export default{
                 { text: 'Envio Voucher', value: 'FlgEnvioVoucher', width: "160px"},
                 { text: 'Envio Fact Prepago', value: 'FlgEnvioFactPrepago', width: "190px"},
                 { text: 'Envio Comercial', value: 'FlgEnvioComercial', width: "170px"},
-            ]
+            ],
+            overlay: ''
         }
 
     },
 
     computed: {
         computedListadoContactos(){
-            return this.filtrarContactos(this.contactos)
+            let data = this.filtrarContactos(this.contactos)
+            sessionStorage.setItem("computedListadoContactos", data);
+            return data
         }
     },
 
@@ -88,6 +107,7 @@ export default{
         filtrarContactos(cp){
             if(!cp) return null
             cp = this.$store.state.datosContactos;
+            
             return cp
         },
 
@@ -95,19 +115,23 @@ export default{
             if (EstadoContactos == true) return this.roundhtml
             else return this.roundhtml_green 
         }
-
-
     },
 
-    mounted(){
-        this.$store.dispatch('getContactos');
+    async mounted(){
+        if (sessionStorage.getItem("computedListadoContactos")) {
+            await this.$store.dispatch('getContactos');
+        }else{
+            this.overlay = true
+            await this.$store.dispatch('getContactos');
+            this.overlay = false
+        }
+        
     }
-
 }
 
 </script>
 
-<style scoped>
+<style >
 
 .div-main-informacion{
     position: relative;
@@ -131,7 +155,60 @@ export default{
     /* border: 2px solid yellow; */
     /* box-shadow: 1px 0px 1px 0px #aaaaaa; */
     border-radius: 2px;
-    
+}
+
+
+.div-informacion-datos-botones{
+    position: relative;
+    display: flex;
+    width: 100%;
+    height: 100%;
+    padding: 0px 35px 15px 30px;
+    right: 0;
+    /* border: 1px solid blue; */
+   /*  background-color: white; */
+    /* box-shadow: 2px 2px 2px 2px #aaaaaa; */
+    border-radius: 2px;
+    justify-content: flex-end;
+    /* border: 1px solid orange; */
+}
+
+.info-boton{
+    color: #fff;
+    padding: 12px 20px 20px 25px;
+    border-radius: 5px;
+    background: #D15939;
+    outline: none;
+    font-size: 14px;
+    box-shadow: 10px 5px 10px grey;
+}
+
+.router-link{
+    font-size: 14px;
+    color: #fff;
+}
+
+.info-boton:first-child{
+    margin-right: 20px;
+}
+
+.info-boton:hover {
+    transform: translatey(3px);
+    box-shadow: none;
+    color: #fff;
+}
+
+/* buttons hover Animation */
+.info-boton:hover {
+    animation: ani9 0.4s ease-in-out infinite alternate;
+}
+@keyframes ani9 {
+    0% {
+        transform: translateY(3px);
+    }
+    100% {
+        transform: translateY(5px);
+    }
 }
 
 
@@ -150,17 +227,17 @@ a {
 
 @media (max-width: 420px) {
     
-    .div-main-informacion{
+.div-main-informacion{
     position: relative;
     display: flex;
     margin-top: 15px;
     width: 100%;
     /* float: right; */
-    height: 60px;
+    height: auto;
     /* border: 1px solid blueviolet; */
-    }
+}
 
-    .div-informacion-datos{
+.div-informacion-datos{
     position: relative;
     margin: 0 auto;
     /* background-color: #fff; */
@@ -171,8 +248,43 @@ a {
     /* border: 2px solid yellow; */
     /* box-shadow: 1px 0px 1px 0px #aaaaaa; */
     border-radius: 2px;
-    
-    }
+}
+
+.div-informacion-datos-botones{
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    padding: 0px 15px 15px 0px;
+    right: 0;
+    /* border: 1px solid blue; */
+   /*  background-color: white; */
+    /* box-shadow: 2px 2px 2px 2px #aaaaaa; */
+    border-radius: 2px;
+    justify-content: flex-end;
+    /* border: 1px solid orange; */
+}
+
+.info-boton{
+    color: #fff;
+    padding: 12px 12px 12px 12px;
+    border-radius: 5px;
+    background: #D15939;
+    outline: none;
+    font-size: 14px;
+}
+
+.info-boton:first-child{
+    margin-right: 20px;
+}
+
+.info-boton:hover {
+    transform: translatey(3px);
+    box-shadow: none;
+}
+
 
 }
 

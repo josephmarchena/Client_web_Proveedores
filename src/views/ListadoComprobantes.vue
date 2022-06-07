@@ -1,5 +1,6 @@
 <template>
     <div>
+        
         <barra-menu-component/>
         <menu-component/>
         <div class="div-main">
@@ -11,6 +12,12 @@
         <filtros-datos-comprobantes/>
         <lista-comprobamtes/>
         
+        <v-overlay :value="overlay">
+            <v-progress-circular
+                indeterminate
+                size="64"
+            ></v-progress-circular>
+         </v-overlay>
     </div>
 </template>
 
@@ -23,13 +30,26 @@ import BarraMenuComponent from '../components/BarraMenuComponent.vue'
 
 export default {
     name: 'listadoComprobantes',
+     data () {
+      return {
+        /* select: [this.datosUser.FormaPago], */
+         overlay : true
+         
+      }
+    },
+
     components:{
         MenuComponent,
         ReportDatosComprobante,
         FiltrosDatosComprobantes,
         ListaComprobamtes,
         BarraMenuComponent,
+    },
+
+    mounted(){
+        this.overlay = false
     }
+
 }
 </script>
 

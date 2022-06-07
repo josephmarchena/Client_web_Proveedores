@@ -7,11 +7,11 @@
                     <li><span class="bnv-message">Bienvenido : <span class="bnv-dato">{{this.$store.state.RazonSocial}}</span></span></li>
                     <li class="bnv-picture"><img src="../assets/image/CostadelSolLogo.png" alt=""></li>
                     <li class="bnv-noti">
-                        <v-icon class="icon-color">mail</v-icon>
+                        <span class="titulo-span"><v-icon class="icon-color" title="Notificaciones">mail</v-icon></span>
                     </li>
                     <li class="bnv-logout">
-                       <p class="close-session"><v-icon class="icon-color icon-color-logout">logout</v-icon> Cerrar Sesion</p>
-                        <v-icon class="icon-color-single icon-color-logout">logout</v-icon>
+                        <router-link to="/" class="router-link"><v-icon class="icon-color icon-color-logout">logout</v-icon>Cerrar Sesion</router-link>
+                        <router-link to="/"><v-icon class="icon-color-single icon-color-logout">logout</v-icon></router-link>
                     </li>
                 </ul>
             </div>
@@ -75,6 +75,8 @@
 
 .icon-color{
     font-size: 18px;
+    cursor: pointer;
+    z-index: 100;
 }
 
 .icon-color-logout{
@@ -90,6 +92,51 @@
 .icon-color-single{
     display: none;
 }
+
+.bnv-logout{
+    width: 108px;
+    /* background-color: blueviolet; */
+    color: black;
+    z-index: 50;
+}
+
+.router-link{
+    font-size: 13px;
+    color: #333333;
+}
+
+.navbar-top-links .bnv-message{
+    font-size: 13px;
+    font-weight: 200;
+}
+
+.bnv-noti{
+    background-color:transparent;
+    cursor: pointer;
+}
+
+.titulo-span:before{
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    /* border-bottom: 2px solid #D15939; */
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: red;
+    padding-top: 5px;
+    cursor: pointer;
+}
+.titulo-span{
+    display: inline-block;
+    position: relative;
+    width: 25px;
+    cursor: pointer;
+}
+
+
 
 
 @media (max-width: 420px) {
@@ -131,19 +178,20 @@
         display: none;
     }
 
-    .close-session{
+    .bnv-logout{
+    width: 38px;
+    /* background-color: blueviolet; */
+    color: black;
+    z-index: 50;
+    }
+
+    .router-link{
         display: none;
     }
 
     .icon-color-single{
         display: block;
     }
-
-
-
 }
-
-
-
 
 </style>

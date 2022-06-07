@@ -51,9 +51,24 @@
                     </div>
                 </div>
 
-                <a href="#"> Olvidaste tu Clave?</a>
-                <input type="submit" class="btn colorbtn" value="Ingresar">
-                
+                <!-- <a href="#"> Olvidaste tu Clave?</a> -->
+                <div class="contenedorbtn">
+                    <v-progress-circular v-if="this.loading"
+                        indeterminate
+                        color="#fff"
+                        width= 2
+                        class="loading"
+                    ></v-progress-circular>
+                     <input type="submit" class="btn colorbtn" value="Ingresar">
+                </div>
+                <div class="text-center">
+      <!-- <v-progress-circular v-if="this.loading"
+        indeterminate
+        color="primary"
+      ></v-progress-circular> -->
+  
+      
+    </div>
             </form>
             <div v-if="mensaje != ''">
                 <v-alert type="error">
@@ -75,7 +90,8 @@ export default {
     data(){
         return {
             usuario: {Correo: '', Contrasenha: ''},
-            mensaje: ''
+            mensaje: '',
+            loading: false
         }
     },
     components:{
@@ -95,9 +111,10 @@ export default {
 
     },
 
-    login(){
+    async login(){
+        this.loading = true
         /* console.log(axios); */
-        axios.post('https://apiweb-colturproveedores.azurewebsites.net/loginProveedores', this.usuario)
+        await axios.post('https://apiweb-colturproveedor.azurewebsites.net/loginProveedores', this.usuario)
         .then(res => {
             const info = res.data.mensaje;
 
@@ -123,6 +140,8 @@ export default {
             this.mensaje =  e.response.data.mensaje
             console.log(e.message);
         })
+
+        this.loading = false
     }
    
   }
@@ -134,6 +153,26 @@ export default {
 
 
 <style scoped>
+
+
+.contenedorbtn{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 50px;
+    width: auto;
+    /* background-color: aqua; */
+    background-image: linear-gradient(to right, #D15939, #D15939, #D15939);
+    border-radius: 25px;
+    z-index: 21;
+}
+
+.loading{
+    /* background-color: blueviolet; */
+    left: 120px;
+    z-index: 21;
+
+}
 
 .colorbtn{
     color: #fff;

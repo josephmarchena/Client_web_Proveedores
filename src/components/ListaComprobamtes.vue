@@ -20,7 +20,6 @@
                     :items-per-page="10"
                     class="elevation-1"
                     locale="es"
-                    
                 >
                 
                 <template v-slot:[`item.estadopago`]="{ item }">
@@ -68,7 +67,8 @@ import {mapState} from 'vuex'
                 { text: 'Nro File', value: 'NroFileRef', width: "120px" },
                 { text: 'Descripcion', value: 'Descripcion', width: "350px" },
                 
-            ],  
+            ], 
+                overlay:false 
             }
         },
         
@@ -82,6 +82,7 @@ import {mapState} from 'vuex'
         },
 
         methods :{
+
             filtraComprobantes(cp){
                 if(!cp) return null
                 cp = this.$store.state.datosfiltroscomprobantes;
