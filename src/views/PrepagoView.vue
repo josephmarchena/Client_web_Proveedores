@@ -10,6 +10,7 @@
         <report-prepagos/>
         <filtros-datos-prepago/>
         <listado-prepago-component/>
+        <leyenda-component :EstadoRed="EstadoRed" :EstadoGreen="EstadoGreen"/>
     </div>
 </template>
 
@@ -19,9 +20,17 @@ import MenuComponent from '../components/MenuComponent.vue'
 import BarraMenuComponent from '../components/BarraMenuComponent.vue'
 import ReportPrepagos from '../components/ReportPrepagos.vue'
 import FiltrosDatosPrepago from '../components/FiltrosDatosPrepago.vue'
+import LeyendaComponent from '../components/LeyendaComponent.vue'
 
 export default{
     name:'PrepagoView',
+
+    data(){
+        return {
+             EstadoRed: 'Pendiente',
+             EstadoGreen: 'Cancelado'
+        }
+    },
 
     components:{
         ListadoPrepagoComponent,
@@ -29,6 +38,7 @@ export default{
         BarraMenuComponent,
         ReportPrepagos,
         FiltrosDatosPrepago,
+        LeyendaComponent,
     }
 }
 </script>

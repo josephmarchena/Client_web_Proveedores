@@ -11,6 +11,7 @@
         <report-datos-comprobante/>
         <filtros-datos-comprobantes/>
         <lista-comprobamtes/>
+        <leyenda-component :EstadoRed="EstadoRed" :EstadoGreen="EstadoGreen"/>
         
         <v-overlay :value="overlay">
             <v-progress-circular
@@ -27,14 +28,16 @@ import ReportDatosComprobante from '../components/ReportDatosComprobante.vue'
 import FiltrosDatosComprobantes from  '../components/FiltrosDatosComprobantes.vue'
 import ListaComprobamtes from  '../components/ListaComprobamtes.vue'
 import BarraMenuComponent from '../components/BarraMenuComponent.vue'
+import LeyendaComponent from '../components/LeyendaComponent.vue'
 
 export default {
     name: 'listadoComprobantes',
      data () {
       return {
         /* select: [this.datosUser.FormaPago], */
-         overlay : true
-         
+         overlay : true,
+         EstadoRed: 'Recepcionado',
+         EstadoGreen: 'Pagado'
       }
     },
 
@@ -44,6 +47,7 @@ export default {
         FiltrosDatosComprobantes,
         ListaComprobamtes,
         BarraMenuComponent,
+        LeyendaComponent,
     },
 
     mounted(){
