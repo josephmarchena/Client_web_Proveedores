@@ -114,7 +114,7 @@ export default {
     async login(){
         this.loading = true
         /* console.log(axios); */
-        await axios.post('http://localhost:4000/loginProveedores', this.usuario)
+        await axios.post('https://apiweb-colturproveedor.azurewebsites.net/loginProveedores', this.usuario)
         .then(res => {
             const info = res.data.mensaje;
 
