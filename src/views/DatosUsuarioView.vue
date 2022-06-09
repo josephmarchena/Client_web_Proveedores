@@ -12,7 +12,7 @@
         <div class="div-informacion-datos">
             <div class="div-informacion-foto">
                     <!-- <img src="../assets/svg/avatarLogin.svg" />    -->
-                    <img src="../assets/image/CostadelSolLogo.png" />   
+                    <h1 :style="{backgroundColor: this.$store.state.Colorbg}">{{this.$store.state.Iniciales}}</h1>   
             </div>
             <div class="div-informacion-datos-fiscales">
                 <div class="div-razonsocial-comercial">
@@ -171,7 +171,8 @@ export default {
         /* select: [this.datosUser.FormaPago], */
          carga :'Hello',
          items: [],
-         overlay : ''
+         overlay : '',
+         colorb: '#fabfb7'
          
       }
     },
@@ -360,13 +361,22 @@ h2{
     height: auto;
     /* background-color: yellow; */
     padding: 40px 70px;
+    
 }
 
-.div-informacion-foto img{
+.div-informacion-foto h1{
     position: relative;
+    display: flex;
     width: 180px;
     height: 180px;
     border-radius: 50%;
+    /* background-color: #88e947cb; */
+    justify-content: center;
+    align-items: center;
+    font-size: 36px;
+    font-weight: 800;
+    color:#8d1044
+    
 }
 
 .div-informacion-datos-fiscales{

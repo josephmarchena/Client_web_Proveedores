@@ -19,6 +19,7 @@
                         :search="searchContactos"
                         :items-per-page="10"
                         class="elevation-1"
+                        :custom-sort="customSort"
                     >
 
                     <template v-slot:[`item.FlgEnvioReserva`]="{ item }">
@@ -43,14 +44,15 @@
             </div>
         </div>
 
-        <div class="div-main">
+        <!-- <div class="div-main">
             <div class="div-informacion-datos-botones">
                 <button class="info-boton" value="Contactos"><router-link to="/datos" class="router-link">Datos Generales</router-link></button>
                 <button class="info-boton" value="Contactos"><router-link to="/establecimientos" class="router-link">Establecimientos</router-link></button>
                 
             </div>
-        </div>
+        </div> -->
 
+        
         <v-overlay :value="overlay">
             <v-progress-circular
                 indeterminate
@@ -114,7 +116,18 @@ export default{
         estadoContactos(EstadoContactos){
             if (EstadoContactos == true) return this.roundhtml
             else return this.roundhtml_green 
-        }
+        },
+
+        customSort(items, index, isDesc) {
+        items.sort((a, b) => {
+          if (isDesc != "false") {
+            return a[index] < b[index] ? -1 : 1
+          } else {
+            return b[index] < a[index] ? -1 : 1
+          }
+        })
+        return items
+      }
     },
 
     async mounted(){
@@ -156,61 +169,6 @@ export default{
     /* box-shadow: 1px 0px 1px 0px #aaaaaa; */
     border-radius: 2px;
 }
-
-
-.div-informacion-datos-botones{
-    position: relative;
-    display: flex;
-    width: 100%;
-    height: 100%;
-    padding: 0px 35px 15px 30px;
-    right: 0;
-    /* border: 1px solid blue; */
-   /*  background-color: white; */
-    /* box-shadow: 2px 2px 2px 2px #aaaaaa; */
-    border-radius: 2px;
-    justify-content: flex-end;
-    /* border: 1px solid orange; */
-}
-
-.info-boton{
-    color: #fff;
-    padding: 12px 20px 20px 25px;
-    border-radius: 5px;
-    background: #D15939;
-    outline: none;
-    font-size: 14px;
-    box-shadow: 10px 5px 10px grey;
-}
-
-.router-link{
-    font-size: 14px;
-    color: #fff;
-}
-
-.info-boton:first-child{
-    margin-right: 20px;
-}
-
-.info-boton:hover {
-    transform: translatey(3px);
-    box-shadow: none;
-    color: #fff;
-}
-
-/* buttons hover Animation */
-.info-boton:hover {
-    animation: ani9 0.4s ease-in-out infinite alternate;
-}
-@keyframes ani9 {
-    0% {
-        transform: translateY(3px);
-    }
-    100% {
-        transform: translateY(5px);
-    }
-}
-
 
 .v-data-table ::v-deep th {
       font-size: 16px !important

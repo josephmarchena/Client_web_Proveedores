@@ -114,7 +114,7 @@ export default {
     async login(){
         this.loading = true
         /* console.log(axios); */
-        await axios.post('https://apiweb-colturproveedor.azurewebsites.net/loginProveedores', this.usuario)
+        await axios.post('http://localhost:4000/loginProveedores', this.usuario)
         .then(res => {
             const info = res.data.mensaje;
 
@@ -125,9 +125,12 @@ export default {
             }else{
                 console.log(res.data);
                 this.$store.state.IdEntidad = res.data.IdEntidad
-                this.$store.state.RazonSocial = res.data.RazonSocial
+                this.$store.state.RazonSocial = res.data.Username
+                this.$store.state.Iniciales = res.data.Inicial
+                this.$store.state.Colorbg = res.data.Colorbg
                 console.log("Mi IdEntidad es : " +this.$store.state.IdEntidad)
                 console.log("Mi IdEntidad es : " +this.$store.state.RazonSocial)
+                console.log("Mi Iniciales es : " +this.$store.state.Iniciales)
                 this.$router.push('/menu')
             }
            /*  if (res.data.status == "400") {

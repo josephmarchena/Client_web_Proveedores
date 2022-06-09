@@ -5,9 +5,21 @@
              <v-app id="inspire">
                 <v-card>
                 <v-card-title>
+                    <v-btn
+                        color="red darken-1 "
+                        text
+                        @click="exportar()"
+                    >
+                        <span>Exportar</span>
+                        <v-icon>file_download</v-icon>
+                    </v-btn>
+                    <v-divider inset vertical></v-divider>
+                     <v-col cols="1" class="p-0">
+                    <v-spacer style="width: 100%"></v-spacer>
+                    </v-col>
                     <v-text-field
                     v-model="search"
-                    append-icon="search file_copy"
+                    append-icon="search"
                     label="Buscar Comprobante"
                     single-line
                     locale="es"
@@ -21,6 +33,15 @@
                     class="elevation-1"
                     locale="es"
                 >
+
+                <!-- <template v-slot:botton>
+                    <v-toolbar style="width:220px">
+                        <v-toolbar-title>
+                            Exportar
+                        </v-toolbar-title>
+                    </v-toolbar>
+                </template> -->
+                
                 
                 <template v-slot:[`item.estadopago`]="{ item }">
                            <!-- {{estadoComprobante(item.estadopago)}} -->
@@ -40,6 +61,7 @@
 
 <script>
 import {mapState} from 'vuex'
+import exportXlsFile from 'export-from-json'
     export default {
         name: 'ListaComprobamtes',
         data(){
@@ -53,7 +75,7 @@ import {mapState} from 'vuex'
                 {
                 text: 'Tipo Documento',
                 align: 'start',
-                filterable: true,
+                sortable: true,
                 value: 'TipoDocumento',
                 width: "170px"
                 },
@@ -61,9 +83,9 @@ import {mapState} from 'vuex'
                 { text: 'Documento', value: 'NroFactura', width: "150px" },
                 { text: 'Moneda', value: 'IdTipoMoneda' , width: "110px" },
                 { text: 'Monto', value: 'MontoFactura' , width: "110px", align: 'end' },
-                { text: 'Fecha Emision', value: 'FechaEmision' , width: "110px" },
-                { text: 'Fecha Recepcion', value: 'FechaRecepcion', width: "150px"  },
-                { text: 'Fecha Vencimiento', value: 'FechaVencimientoFact', width: "150px" },
+                { text: 'Fecha Emision', value: 'FechaEmision' , width: "100px"},
+                { text: 'Fecha Recepcion', value: 'FechaRecepcion', width: "120px"  },
+                { text: 'Fecha Vencimiento', value: 'FechaVencimientoFact', width: "120px" },
                 { text: 'Nro File', value: 'NroFileRef', width: "120px" },
                 { text: 'Descripcion', value: 'Descripcion', width: "350px" },
                 
@@ -92,6 +114,17 @@ import {mapState} from 'vuex'
             estadoComprobante(EstadoComprobantes){
                 if(EstadoComprobantes == "Pagado") return this.roundhtml_green
                 else return this.roundhtml
+            },
+
+            exportar(exportType){
+                const data = this.$store.state.datosfiltroscomprobantes;
+                const fecha = new Date().getDate().length > 1 ? new Date().getDate(): '0' + new Date().getDate() +'-'+ (new Date().getMonth() +1) +'-'+ (new Date().getFullYear());
+                const fileName = "comprobantes-" + fecha
+                exportType = exportXlsFile.types.xls;
+
+                exportXlsFile({
+                        data, fileName,exportType
+                })
             }
 
         },

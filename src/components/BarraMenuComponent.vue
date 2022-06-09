@@ -4,13 +4,14 @@
             <div class="menu-left"></div>
             <div class="menu-right">
                 <ul class="nav navbar-top-links">
-                    <li><span class="bnv-message">Bienvenido : <span class="bnv-dato">{{this.$store.state.RazonSocial}}</span></span></li>
-                    <li class="bnv-picture"><img src="../assets/image/CostadelSolLogo.png" alt=""></li>
+                    <li><span class="bnv-message">Bienvenido : <span class="bnv-dato" >{{this.$store.state.RazonSocial}}</span></span></li>
+                    <!-- <li class="bnv-picture"><img src="../assets/image/CostadelSolLogo.png" alt=""></li> -->
+                    <li class="bnv-picture" :style="{backgroundColor: this.$store.state.Colorbg}">{{this.$store.state.Iniciales}}</li>
                     <li class="bnv-noti">
                         <span class="titulo-span"><v-icon class="icon-color" title="Notificaciones">mail</v-icon></span>
                     </li>
                     <li class="bnv-logout">
-                        <router-link to="/" class="router-link"><v-icon class="icon-color icon-color-logout">logout</v-icon>Cerrar Sesion</router-link>
+                        <router-link to="/" class="router-link" ><v-icon class="icon-color icon-color-logout" @click="cerrarSession" title="Cerrar Sesion">logout</v-icon><a class="router-link" @click="cerrarSession" title="Cerrar Sesion">Cerrar Sesion</a></router-link>
                         <router-link to="/"><v-icon class="icon-color-single icon-color-logout">logout</v-icon></router-link>
                     </li>
                 </ul>
@@ -21,6 +22,24 @@
 
 
 <script>
+    export default{
+        name: 'BarrarMenuComponent',
+        data() {
+            return {
+                colorb: '#fabfb7'
+            }
+
+        },
+        methods: {
+            cerrarSession(){
+                if (sessionStorage.getItem('ListDatos')) {
+                    sessionStorage.removeItem('ListDatos')
+                }
+            }
+        }
+
+
+    }
 
 </script>
 
@@ -50,10 +69,15 @@
     justify-content: flex-end;
 }
 
-.bnv-picture img{
+.bnv-picture{
     width: 40px;
     height: 40px;
+    text-align: center;
+    line-height: 40px;
     border-radius: 50%;
+    font-size: 36px;
+    font-weight: 600;
+    color:#8d1044
 }
 
 .nav{
@@ -101,6 +125,7 @@
 }
 
 .router-link{
+    display: flex;
     font-size: 13px;
     color: #333333;
 }

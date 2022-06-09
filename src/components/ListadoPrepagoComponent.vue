@@ -5,6 +5,18 @@
                 <v-app id="inspire">
                     <v-card>
                         <v-card-title>
+                            <v-btn
+                                color="red darken-1 "
+                                text
+                                @click="exportar()"
+                            >
+                                <span>Exportar</span>
+                                <v-icon>file_download</v-icon>
+                            </v-btn>
+                            <v-divider inset vertical></v-divider>
+                            <v-col cols="1" class="p-0">
+                            <v-spacer style="width: 100%"></v-spacer>
+                            </v-col>
                             <v-text-field
                             v-model="search"
                             append-icon="search"
@@ -52,6 +64,7 @@
 import MenuComponent from '../components/MenuComponent.vue'
 import BarraMenuComponent from '../components/BarraMenuComponent.vue' */
 import {mapState} from 'vuex'
+import exportXlsFile from 'export-from-json'
 
 export default{
     name: 'ListadoPrepagoComponent',
@@ -113,6 +126,17 @@ export default{
             getImage (flgEnvioCorreo) {
                 if (flgEnvioCorreo == true) return 'mark_email_read'
                 else return ''
+            },
+
+            exportar(exportType){
+                const data = this.$store.state.datosfiltrosprepago;
+                const fecha = new Date().getDate().length > 1 ? new Date().getDate(): '0' + new Date().getDate() +'-'+ (new Date().getMonth() +1) +'-'+ (new Date().getFullYear());
+                const fileName = "prepagos-" + fecha
+                exportType = exportXlsFile.types.xls;
+
+                exportXlsFile({
+                        data, fileName,exportType
+                })
             },
 
         },

@@ -31,7 +31,9 @@ export default new Vuex.Store({
     filtroFechaHasta_Prepago : '2022-05-15',
     datosfiltrosprepago: [],
     datosEstablecimientos: [],
-    datosContactos: []
+    datosContactos: [],
+    Iniciales: '',
+    Colorbg: '',
   },
   getters: {
   },
